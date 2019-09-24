@@ -34,7 +34,7 @@ struct Fraction				// структура, хранящая несократим�
 
 int gcd (int a, int b)		// НОД(a, b)
 {
-  int r = 0;			// остаток от деления
+  int r = 0;
     do
     {
       r = abs(a % b);
@@ -131,18 +131,6 @@ bool operator<= (Fraction f1, Fraction f2)
   return !(f1 > f2);
 }
 
-Fraction operator++ (Fraction& f)
-{
-    f.numerator += f.denominator;
-    return reduce(f);
-}
-
-Fraction operator-- (Fraction& f)
-{
-    f.numerator -= f.denominator;
-    return reduce(f);
-}
-
 Fraction Fraction::operator= (Fraction f)
 {
     numerator = f.numerator;
@@ -176,8 +164,6 @@ int main ()
     cout << "2) " << a << " / " << b << " = " << a / b << endl;
     cout << "3) " << a << " - " << b << " = " << a - b << endl;
     cout << "4) " << a << " + " << b << " = " << a + b << endl;
-    cout << "5) " << a << " + " << 1 << " = " << ++a << endl;
-    cout << "6) " << b << " - " << 1 << " = " << --b << endl;
     
     if (a <= b)		// примеры сравнений
     { 
