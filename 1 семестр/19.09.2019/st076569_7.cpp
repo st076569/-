@@ -6,32 +6,6 @@
 #include <cmath>
 using namespace std;
 
-struct Fraction				// структура, хранящая несократимые дроби
-{
-  int numerator,denominator;		// числитель и знаменатель соответственно    
-    Fraction (int num, int den)		// конструктор от пары целых чисел
-     {
-       numerator = num;
-       denominator = den;
-     }
-    Fraction (int a)			// конструктор от целого числа
-     {
-       numerator = a;
-       denominator = 1;
-     }
-    Fraction (const Fraction& f)	// конструктор от рационального числа
-     {
-       numerator = f.numerator;
-       denominator = f.denominator;
-     }
-    Fraction ()				// конструктор по умолчанию
-     {
-       numerator = 0;
-       denominator = 1;
-     }
-    Fraction operator= (Fraction f);
-};
-
 int gcd (int a, int b)		// НОД(a, b)
 {
   int r = 0;
@@ -50,54 +24,108 @@ int gcd (int a, int b)		// НОД(a, b)
 
 int lcm (int a, int b)		// НОК(a, b)
 {
-  return abs(a*b/gcd(a,b));
+    return abs(a*b/gcd(a,b));
 }
 
-Fraction reduce (Fraction f)	// сократить дробь
+struct Fraction				// структура, хранящая несократимые дроби
 {
-  int n = gcd(f.numerator, f.denominator);
-    f.numerator /= n;
-    f.denominator /= n;
-    if (f.denominator < 0)
+  int numerator,denominator;		// числитель и знаменатель соответственно    
+    Fraction (int num, int den)		// конструктор от пары целых чисел
+     {
+       numerator = num;
+       denominator = den;
+       reduce();
+     }
+    Fraction (int a)			// конструктор от целого числа
+     {
+       numerator = a;
+       denominator = 1;
+     }
+    Fraction (const Fraction& f)	// конструктор от рационального числа
+     {
+       numerator = f.numerator;
+       denominator = f.denominator;
+       reduce();
+     }
+    Fraction ()				// конструктор по умолчанию
+     {
+       numerator = 0;
+       denominator = 1;
+     }
+    void reduce ();			// сокращение дроби
+    Fraction operator= (Fraction f)
+     {
+       numerator = f.numerator;
+       denominator = f.denominator;
+       reduce();
+       return *this;
+     }
+    Fraction operator+= (Fraction f)
+     {
+       int l = lcm(denominator, f.denominator);
+       numerator = numerator*l/denominator + f.numerator*l/f.denominator;
+       denominator = l;
+       reduce();
+       return *this;
+     }
+    Fraction operator*= (Fraction f)
+     {
+       numerator *= f.numerator;
+       denominator *= f.denominator;
+       reduce();
+       return *this;
+     }
+    Fraction operator-= (Fraction f)
+     {
+       int l = lcm(denominator, f.denominator);
+       numerator = numerator*l/denominator - f.numerator*l/f.denominator;
+       denominator = l;
+       reduce();
+       return *this;
+     }
+    Fraction operator/= (Fraction f)
+     {
+       numerator *= f.denominator;
+       denominator *= f.numerator;
+       reduce();
+       return *this;
+     }
+};
+
+void Fraction::reduce ()	// сократить дробь
+{
+  int n = gcd(numerator, denominator);
+    numerator /= n;
+    denominator /= n;
+    if (denominator < 0)
     {
-      f.numerator *= -1;
-      f.denominator *= -1;
+      numerator *= -1;
+      denominator *= -1;
     }
-    return f;
 }
 
 Fraction operator* (Fraction f1, Fraction f2)
 {
-  Fraction f3;
-    f3.numerator = f1.numerator * f2.numerator;
-    f3.denominator = f1.denominator * f2.denominator;
-    return reduce(f3);
+    f1 *= f2; 
+    return f1;
 }
 
 Fraction operator/ (Fraction f1, Fraction f2)
 {
-  Fraction f3;
-    f3.numerator = f1.numerator * f2.denominator;
-    f3.denominator = f1.denominator * f2.numerator;
-    return reduce(f3);
+    f1 /= f2;
+    return f1;
 }
 
 Fraction operator+ (Fraction f1, Fraction f2)
 {
-  Fraction f3;
-  int l = lcm(f1.denominator, f2.denominator);  
-    f3.denominator = l;
-    f3.numerator = f1.numerator*l/f1.denominator + f2.numerator*l/f2.denominator;
-    return reduce(f3);
+    f1 += f2;
+    return f1;
 }
 
 Fraction operator- (Fraction f1, Fraction f2)
 {
-  Fraction f3;
-  int l = lcm(f1.denominator, f2.denominator);  
-    f3.denominator = l;
-    f3.numerator = f1.numerator*l/f1.denominator - f2.numerator*l/f2.denominator;
-    return reduce(f3);
+    f1 -= f2;
+    return f1;
 }
 
 bool operator> (Fraction f1, Fraction f2)
@@ -131,11 +159,9 @@ bool operator<= (Fraction f1, Fraction f2)
   return !(f1 > f2);
 }
 
-Fraction Fraction::operator= (Fraction f)
+bool operator!= (Fraction f1, Fraction f2)
 {
-    numerator = f.numerator;
-    denominator = f.denominator;
-    return *this;
+  return !(f1 == f2);
 }
 
 std::ostream& operator<< (std::ostream &out, Fraction f)
@@ -153,33 +179,30 @@ std::istream& operator>> (std::istream &in, Fraction &f)
 
 int main ()
 {
-  Fraction a (11, 9);		// использование конструкторов
+  Fraction a (-22, 18);		// использование конструкторов
   Fraction c (10);
   Fraction b (a + c);
 
-    /* cin >> a >> b; */	// возможен ввод с клавиатуры
-
     cout << " a = " << a << "; b = " << b << ";" << endl;	// примеры арифметич. операций
-    cout << "1) " << a << " * " << b << " = " << a * b << endl;
-    cout << "2) " << a << " / " << b << " = " << a / b << endl;
-    cout << "3) " << a << " - " << b << " = " << a - b << endl;
-    cout << "4) " << a << " + " << b << " = " << a + b << endl;
-    
-    if (a <= b)		// примеры сравнений
+    cout << " *) " << a << " * " << b << " = " << a * b << endl;
+    cout << " /) " << a << " / " << b << " = " << a / b << endl;
+    cout << " -) " << a << " - " << b << " = " << a - b << endl;
+    cout << " +) " << a << " + " << b << " = " << a + b << endl;
+    a += b;
+    cout << " +=) a += b" << " : a = " << a << endl;
+    a -= b;
+    cout << " -=) a -= b" << " : a = " << a << endl;
+    a *= b;
+    cout << " *=) a *= b" << " : a = " << a << endl;
+    a /= b;
+    cout << " /=) a /= b" << " : a = " << a << endl;
+
+    if (a != b)		// примеры сравнений
     { 
-      cout << a << " <= " << b << endl;
+      cout << a << " != " << b << endl;
     } else
     {
-      cout << a << " > " << b << endl;
-    }
-
-    for (int i = 0; i <= 3; i++)
-    {
-      if (b > a / c)
-      {
-        cout << b << "; ";
-      }
-      b = b / c;
+      cout << a << " = " << b << endl;
     }
     return 0;
 }
