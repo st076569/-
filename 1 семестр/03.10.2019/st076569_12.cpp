@@ -1,8 +1,8 @@
-//Реализовать решето эратосфена
+п»ї//Р РµР°Р»РёР·РѕРІР°С‚СЊ СЂРµС€РµС‚Рѕ СЌСЂР°С‚РѕСЃС„РµРЅР°
 #include <iostream>
 using namespace std;
 
-void choose_prime (bool* a, int k)	//Решето Эратосфена
+void choose_prime (bool* a, int k)	//Р РµС€РµС‚Рѕ Р­СЂР°С‚РѕСЃС„РµРЅР°
 {
     for (int i = 0; i <= k; a[i++] = 1);
     for (int i = 2; i <= k; i++)
@@ -17,7 +17,7 @@ void choose_prime (bool* a, int k)	//Решето Эратосфена
     }
 }
 
-void out_mas (bool* a, int k)		//Вывод на экран всех простых чисел от 2 до k
+void out_mas (bool* a, int k)		//Р’С‹РІРѕРґ РЅР° СЌРєСЂР°РЅ РІСЃРµС… РїСЂРѕСЃС‚С‹С… С‡РёСЃРµР» РѕС‚ 2 РґРѕ k
 {
     for (int i = 2; i <= k; i++)
     {

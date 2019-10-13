@@ -1,19 +1,19 @@
-/*
-Написать функции, проверяющие является ли число:
-1) Числом Мерсена
-2) Числом Ферма
-3) Числом Вильсона
-4) Числом Вагстаффа
-5) Числом Вифериха
-6) Числом Софи Жермен
-7) Числом Хиггса
+п»ї/*
+РќР°РїРёСЃР°С‚СЊ С„СѓРЅРєС†РёРё, РїСЂРѕРІРµСЂСЏСЋС‰РёРµ СЏРІР»СЏРµС‚СЃСЏ Р»Рё С‡РёСЃР»Рѕ:
+1) Р§РёСЃР»РѕРј РњРµСЂСЃРµРЅР°
+2) Р§РёСЃР»РѕРј Р¤РµСЂРјР°
+3) Р§РёСЃР»РѕРј Р’РёР»СЊСЃРѕРЅР°
+4) Р§РёСЃР»РѕРј Р’Р°РіСЃС‚Р°С„С„Р°
+5) Р§РёСЃР»РѕРј Р’РёС„РµСЂРёС…Р°
+6) Р§РёСЃР»РѕРј РЎРѕС„Рё Р–РµСЂРјРµРЅ
+7) Р§РёСЃР»РѕРј РҐРёРіРіСЃР°
 */
 
 #include <iostream>
 #include <cmath>
 using namespace std;
 
-bool Simple (int x)		//Функция проверки числа на простоту
+bool Simple (int x)		//Р¤СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё С‡РёСЃР»Р° РЅР° РїСЂРѕСЃС‚РѕС‚Сѓ
 {	
     bool is_simple = true;
     int n = sqrt(x);
@@ -31,7 +31,7 @@ bool Simple (int x)		//Функция проверки числа на простоту
     return is_simple;
 }
 
-bool Mersenne_number (int x)	//Проверка на число Мерсенна
+bool Mersenne_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ РњРµСЂСЃРµРЅРЅР°
 {
     bool is_mers_num = true;
     if (x % 2 == 0 || x < 0)
@@ -53,7 +53,7 @@ bool Mersenne_number (int x)	//Проверка на число Мерсенна
     return is_mers_num;
 }
 
-bool Fermat_number (int x)	//Проверка на число Ферма
+bool Fermat_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ Р¤РµСЂРјР°
 {
     bool is_fer_num = true;
     if (x % 2 == 0 || x < 3)
@@ -88,7 +88,7 @@ bool Fermat_number (int x)	//Проверка на число Ферма
     return is_fer_num;
 }
 
-bool Wilson_number (int x)	//Проверка на число Вильсона
+bool Wilson_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ Р’РёР»СЊСЃРѕРЅР°
 {
     bool is_wils_num = true;
     if (x < 1 || x > 600000)
@@ -111,7 +111,7 @@ bool Wilson_number (int x)	//Проверка на число Вильсона
     return is_wils_num;
 }
 
-bool Wagstaff_number (int x)	//Проверка на число Вагстаффа
+bool Wagstaff_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ Р’Р°РіСЃС‚Р°С„С„Р°
 {
     bool is_wags_num = true;
     if (x % 2 == 0 || x < 0)
@@ -143,7 +143,7 @@ bool Wagstaff_number (int x)	//Проверка на число Вагстаффа
     return is_wags_num;
 }
 
-bool Wieferich_number (int x)	//Проверка на число Вифериха
+bool Wieferich_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ Р’РёС„РµСЂРёС…Р°
 {
     bool is_wief_num = true;
     if (x < 2 || x % 2 == 0)
@@ -166,13 +166,13 @@ bool Wieferich_number (int x)	//Проверка на число Вифериха
     return is_wief_num;
 }
 
-bool Sophie_g_number (int x)	//Проверка на число Софи Жермен
+bool Sophie_g_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ РЎРѕС„Рё Р–РµСЂРјРµРЅ
 {
     return (Simple(x) && x > 1 && Simple(2*x+1));
 }
 
 /*
-bool Higgs_number (int x)	//Проверка на число Хиггса реккурсивным алгоритмом
+bool Higgs_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ РҐРёРіРіСЃР° СЂРµРєРєСѓСЂСЃРёРІРЅС‹Рј Р°Р»РіРѕСЂРёС‚РјРѕРј
 {
     bool is_hig_num = true;
     if (!Simple(x) || x < 2 || x > 127)
@@ -201,7 +201,7 @@ bool Higgs_number (int x)	//Проверка на число Хиггса реккурсивным алгоритмом
 }
 */
 
-bool Higgs_number (int x)	//Проверка на число Хиггса
+bool Higgs_number (int x)	//РџСЂРѕРІРµСЂРєР° РЅР° С‡РёСЃР»Рѕ РҐРёРіРіСЃР°
 {
     bool is_hig_num = true;
     if (!Simple(x) || x < 2 || x > 100000)
