@@ -1,9 +1,9 @@
-// Реализовать timsort без использования дополнительной памяти
+п»ї// Р РµР°Р»РёР·РѕРІР°С‚СЊ timsort Р±РµР· РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ РїР°РјСЏС‚Рё
 
 #include <iostream>
 using namespace std;
 
-void MergeSort(int* a1, int* a2, int* b1, int* b2)	// Процедура слияния двух подмассивов внутри основного массива
+void MergeSort(int* a1, int* a2, int* b1, int* b2)	// РџСЂРѕС†РµРґСѓСЂР° СЃР»РёСЏРЅРёСЏ РґРІСѓС… РїРѕРґРјР°СЃСЃРёРІРѕРІ РІРЅСѓС‚СЂРё РѕСЃРЅРѕРІРЅРѕРіРѕ РјР°СЃСЃРёРІР°
 {
     int temp = 0;
     do
@@ -29,7 +29,7 @@ void MergeSort(int* a1, int* a2, int* b1, int* b2)	// Процедура слияния двух под
     while (a2 != b2 && a1 != b1);
 }
 
-int GetMin(int n)			// Поиск критической длины подмассива
+int GetMin(int n)			// РџРѕРёСЃРє РєСЂРёС‚РёС‡РµСЃРєРѕР№ РґР»РёРЅС‹ РїРѕРґРјР°СЃСЃРёРІР°
 {
     int r = 0;
     while (n >= 64)
@@ -40,7 +40,7 @@ int GetMin(int n)			// Поиск критической длины подмассива
     return n + r;
 }
 
-void InsertionSort(int* a, int n)	// Сортировка вставками
+void InsertionSort(int* a, int n)	// РЎРѕСЂС‚РёСЂРѕРІРєР° РІСЃС‚Р°РІРєР°РјРё
 {
     int base = 0, temp = 0, k = 0;
     while (base < n - 1)
@@ -60,7 +60,7 @@ void InsertionSort(int* a, int n)	// Сортировка вставками
     }
 }
 
-void TimSort(int* a1, int n, int min)	// TimSort (сортировка по возрастанию)
+void TimSort(int* a1, int n, int min)	// TimSort (СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ)
 {
     if (n > min)
     {
@@ -85,14 +85,14 @@ void TimSort(int* a1, int n, int min)	// TimSort (сортировка по возрастанию)
     }
 }
 
-void In_array(int* a, int n)	// Ввод массива		
+void In_array(int* a, int n)	// Р’РІРѕРґ РјР°СЃСЃРёРІР°		
 {
     cout << "(Write down elements)" << endl;
     cout << "Array before : ";
     for (int i = 0; i < n; cin >> a[i++]);
 }
 
-void Out_array(int* a, int n)	// Вывод массива
+void Out_array(int* a, int n)	// Р’С‹РІРѕРґ РјР°СЃСЃРёРІР°
 {
     cout << "Array after  : ";
     for (int i = 0; i < n; cout << a[i++] << " ");
