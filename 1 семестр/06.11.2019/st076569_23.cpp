@@ -1,49 +1,49 @@
-// Реализовать универсальный градиентный спуск.
+п»ї// Р РµР°Р»РёР·РѕРІР°С‚СЊ СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РіСЂР°РґРёРµРЅС‚РЅС‹Р№ СЃРїСѓСЃРє.
 
 #include <iostream>
 #include <cmath>
 using namespace std;
 
-const double dx = 0.0001;		// Приращение аргумента
-const double step = 0.1;		// Коэффициент перед градиентом
-const double err = 0.001;		// Погрешность
+const double dx = 0.0001;		// РџСЂРёСЂР°С‰РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р°
+const double step = 0.1;		// РљРѕСЌС„С„РёС†РёРµРЅС‚ РїРµСЂРµРґ РіСЂР°РґРёРµРЅС‚РѕРј
+const double err = 0.001;		// РџРѕРіСЂРµС€РЅРѕСЃС‚СЊ
 
-double Function1(double* x, int n)	// (-0.5,-1) - старт; step = 0.1; min = (0.99,0.99); f(min) = -4;
+double Function1(double* x, int n)	// (-0.5,-1) - СЃС‚Р°СЂС‚; step = 0.1; min = (0.99,0.99); f(min) = -4;
 {
     double f = 0;
     f = pow(x[0],3) + 2 * pow(x[1],2) - 3 * x[0] - 4 * x[1];
     return f;
 }
 
-double Function2(double* x, int n)	// (0,0) - старт; step = 0.1; min = (-0.29,-0.16); f(min) = 0.77;
+double Function2(double* x, int n)	// (0,0) - СЃС‚Р°СЂС‚; step = 0.1; min = (-0.29,-0.16); f(min) = 0.77;
 {
     double f = 0;
     f = pow(x[0],2) + 2 * pow(x[1],2) + exp(x[0] + x[1]);
     return f;
 }
 
-double Function3(double* x, int n)	// (-0.3,0.3) - старт; step = 0.1; min = (0.34,0.82); f(min) = -0.2;
+double Function3(double* x, int n)	// (-0.3,0.3) - СЃС‚Р°СЂС‚; step = 0.1; min = (0.34,0.82); f(min) = -0.2;
 {
     double f = 0;
     f = -sin(0.5 * pow(x[0],2) - 0.25 * pow(x[1],2) + 3) * cos(2 * x[0] + 1 - exp(x[1]));
     return f;
 }
 
-double Function4(double* x, int n)	// (1.1,1.1) - старт; step = 0.001; min = (1.057,1.118); f(min) = 0.0033;
+double Function4(double* x, int n)	// (1.1,1.1) - СЃС‚Р°СЂС‚; step = 0.001; min = (1.057,1.118); f(min) = 0.0033;
 {
     double f = 0;
     f = pow(1 - x[0],2) + 100 * pow(x[1] - x[0] * x[0],2);
     return f;
 }
 
-double Function5(double* x, int n)	// (4) - старт; step = 0.1; min = (0.0039); f(min) = 0.00;
+double Function5(double* x, int n)	// (4) - СЃС‚Р°СЂС‚; step = 0.1; min = (0.0039); f(min) = 0.00;
 {
     double f = 0;
     f = pow(x[0],2);
     return f;
 }
 
-void InputDot(double* x, int n)		// Ввод стартовой точки
+void InputDot(double* x, int n)		// Р’РІРѕРґ СЃС‚Р°СЂС‚РѕРІРѕР№ С‚РѕС‡РєРё
 {
     cout << "Write down start point coordinates" << endl;
     for (int i = 0; i < n; i++)
@@ -53,7 +53,7 @@ void InputDot(double* x, int n)		// Ввод стартовой точки
     }
 }
 
-void OutputDot(double* x, int n)	// Вывод точки х на экран
+void OutputDot(double* x, int n)	// Р’С‹РІРѕРґ С‚РѕС‡РєРё С… РЅР° СЌРєСЂР°РЅ
 {
     cout << "Point coordinates : {";
     for (int i = 0; i < n; i++)
@@ -67,7 +67,7 @@ void OutputDot(double* x, int n)	// Вывод точки х на экран
     cout << "}" << endl;
 }
 
-void Gradient(double (*f)(double*, int), double* g, double* x, int n)	// Градиент "g" функции "f" в точке "х"
+void Gradient(double (*f)(double*, int), double* g, double* x, int n)	// Р“СЂР°РґРёРµРЅС‚ "g" С„СѓРЅРєС†РёРё "f" РІ С‚РѕС‡РєРµ "С…"
 {
     double y[n];
     for (int i = 0; i < n; i++)
@@ -85,7 +85,7 @@ void Gradient(double (*f)(double*, int), double* g, double* x, int n)	// Градиен
     }
 }
 
-double Distance(double* x, double* y, int n)	// Расстояние между точками x, y
+double Distance(double* x, double* y, int n)	// Р Р°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ С‚РѕС‡РєР°РјРё x, y
 {
     double sum = 0;
     for (int i = 0; i < n; i++)
@@ -95,7 +95,7 @@ double Distance(double* x, double* y, int n)	// Расстояние между точками x, y
     return sqrt(sum);
 }
 
-void LocMin(double (*f)(double*, int), double* x, double& fmin, int n)	// Поиск локального минимума
+void LocMin(double (*f)(double*, int), double* x, double& fmin, int n)	// РџРѕРёСЃРє Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРёРЅРёРјСѓРјР°
 {
     double grad[n];
     double xl[n];
