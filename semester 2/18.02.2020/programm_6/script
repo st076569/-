@@ -1,0 +1,48 @@
+#! bin/bash
+
+if [[ -e ./Makefile && -f ./Makefile ]]
+then
+    make -f Makefile
+else
+    echo "Error: 'Makefile' not found"
+    exit 0
+fi
+
+if [ -e ./binaries ]
+then
+    mv ./MyProg ./binaries
+    rm  *.o
+else
+    echo "Error: dir 'binaries' Not found"
+    rm *.o
+    rm ./MyProg
+    exit 0
+fi
+
+if [[ -e ./test && -e ./result ]]
+then
+    for var in 1 2 3 4 5 6 7 8 9 10
+    do
+        ./binaries/MyProg > ./result/test_res_$var.txt < ./test/test_in_$var.txt
+    done
+    #rename 'y/in/res/' ./result/*
+else
+    echo "Error: dir 'test' or 'result' not found"
+    exit 0
+fi
+
+if [[ -e ./out ]]
+then
+    a=0
+    for i in 1 2 3 4 5 6 7 8 9 10
+    do
+        if [[ -z $(diff -q ./result/test_res_$i.txt ./out/test_out_$i.txt) ]]
+        then
+            let "a = a + 1"
+        fi
+    done
+    echo " > $a / 10 tests are correct"
+else
+    echo "Error: dir 'out' not found"
+    exit 0
+fi
