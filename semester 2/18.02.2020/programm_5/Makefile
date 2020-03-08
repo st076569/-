@@ -6,7 +6,6 @@ functions.o:
 
 st076569_5.o:
 	g++ -c ./source/st076569_5.cpp -I ./headers
-
 clean:
-	rm -f *.o
+	rm -f st076569_5 *.o
 
