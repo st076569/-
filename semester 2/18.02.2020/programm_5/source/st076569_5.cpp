@@ -6,21 +6,30 @@ put_to_file(), get_from_file().
 */
 
 #include <ctime>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include "functions.h"
 
 using namespace std;
 
 int main()
 {
-    srand(time(0));    
+    srand(time(0));
     MainElement a, b;
     
     element_init(a);
+    cout << "+------------------------------------------+" << endl;
+    cout << "<<<<<<<<<< To file >>>>>>>>>>" << endl;
     element_out(a);
     put_to_file("test.txt", a);
+    
     get_from_file("test.txt", b);
+    cout << "<<<<<<<<<< From file >>>>>>>>>>" << endl;
     element_out(b);
     
-    system("Pause");
+    cout << "Press 'Enter' to continue...";
+    getchar();
+    
     return 0;
 }

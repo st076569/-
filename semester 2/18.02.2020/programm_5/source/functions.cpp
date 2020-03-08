@@ -7,8 +7,8 @@ put_to_file(), get_from_file().
 
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <vector>
+#include <cstdio>
+#include <cstdlib>
 #include "functions.h"
 
 using namespace std;
@@ -122,13 +122,13 @@ void element_init(MainElement &e)
         e.str2 += static_cast<char>(97 + rand() % 26);
     }
     
-    e.a1 = 0.01 * rand();
-    e.b1 = 0.01 * rand();
-    e.c1 = 0.01 * rand();
+    e.a1 = 0.01 * (rand() % 50000);
+    e.b1 = 0.01 * (rand() % 50000);
+    e.c1 = 0.01 * (rand() % 50000);
     
-    e.a2 = rand();
-    e.b2 = rand();
-    e.c2 = rand();
+    e.a2 = rand() % 50000;
+    e.b2 = rand() % 50000;
+    e.c2 = rand() % 50000;
     
     e.bool1 = rand() % 2 == 1;
     
@@ -136,50 +136,59 @@ void element_init(MainElement &e)
     {
         e.array1[i] = rand() % 20000;
         e.array2[i] = static_cast <char> (32 + rand() % 94);
-        e.array3[i] = -0.001 * rand();
+        e.array3[i] = -0.001 * (rand() % 50000);
     }
     
     for (int i = 0; i < vec_num; i++)
     {
-        e.vec1[i] = 0.001 * rand();
-        e.vec2[i] = -0.01 * rand();
+        e.vec1[i] = 0.001 * (rand() % 50000);
+        e.vec2[i] = -0.01 * (rand() % 50000);
         e.vec3[i] = rand() % 2 == 1;
     }
 }
 
-void put_to_file(string fname, MainElement &e)
+void put_to_file(const char* fname, MainElement &e)
 {
-    ofstream fout;
-  //  int el_size = sizeof(e);
-  //  char* head = (char*)&e;
+    FILE *fp;
+    int size = sizeof(MainElement);
+    char *cp = (char*)&e;
     
-    fout.open(fname);
-    fout.write((char*)&e, sizeof(MainElement));
-    fout.close();
+    if ((fp = fopen(fname, "wb")) == NULL)
+    {
+        printf("Error : Can not open file");
+        getchar();
+    }
+    else
+    {
+        for (int i = 0; i < size; ++i)
+        {
+            fputc(*(cp + i), fp);
+        }
+    }
+    fclose(fp);
 }
 
-void get_from_file(string fname, MainElement &e)
+void get_from_file(const char* fname, MainElement &e)
 {
-    ifstream fin;
-    /*fin.open(fname);
-    fin.seekg(0, fin.end);
-    int el_size = fin.tellg();
-    fin.seekg(0, fin.beg);
-    char head[el_size];
+    FILE *fp;
+    int size = sizeof(MainElement);
+    char array[size];
     
-    for (int i = 0; i < el_size; i++)
+    if ((fp = fopen(fname, "rb")) == NULL)
     {
-        head[i] = fin.get();
-        cout << head[i];
+        printf("Error : Can not open file");
+        getchar();
     }
-    cout << el_size << endl;
-    fin.close();
+    else
+    {
+        for (int i = 0; i < size; ++i)
+        {
+            array[i] = fgetc(fp);
+        }
+    }
+    fclose(fp);
     
     MainElement* A;
-    A = (MainElement*)head;
-    e = *A; */
-    
-    fin.open(fname);
-    fin.read((char*)&e, sizeof(MainElement));
-    fin.close();
+    A = (MainElement*)array;
+    e = *A;
 }
