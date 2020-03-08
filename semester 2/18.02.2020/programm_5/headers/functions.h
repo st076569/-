@@ -8,13 +8,12 @@ put_to_file(), get_from_file().
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include <string>
-#include <vector>
-
 using namespace std;
 
 const int arr_num = 20;
 const int vec_num = 30;
+
+#include <string>
 
 struct MainElement
 {
@@ -30,8 +29,9 @@ struct MainElement
     float array3[arr_num];    
 };
 
-void put_to_file(string fname, MainElement &e);
-void get_from_file(string fname, MainElement &e);
+void put_to_file(const char* fname, MainElement &e);
+void get_from_file(const char* fname, MainElement &e);
+
 void element_out(MainElement &e);
 void element_init(MainElement &e);
 
