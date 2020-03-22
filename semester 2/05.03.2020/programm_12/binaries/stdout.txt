@@ -1,0 +1,82 @@
+Ключи : числа >= 0
+Слева значение, справа ключ
+
+Вывод 1)
+<<<<<<<<        Programm_12        >>>>>>>>
++-----------------------------------------+
+| Example :                               |
+| > Write down number of elements : 3     |
+| > Write down elements (value key)       |
+| 1) : 5 1                                |
+| 2) : 10 2                               |
+| 3) : 7 8                                |
++-----------------------------------------+
+
+ > Write down number of elements : 5
+ > Write down elements (value key)
+ 1) 1 3
+ 2) 4 5
+ 3) 7 8
+ 4) 2 4
+ 5) 8 7
+
+ > Height  : 3
+ > Width   : 2
+
+ > Write down key : 9
+
+ > tree[9] = -1
+ > tree.depth(9) = -1
+
+[ tree ]
+ <> value : 1; key : 3
+ <> value : 2; key : 4
+ <> value : 4; key : 5
+ <> value : 8; key : 7
+ <> value : 7; key : 8
+[ ---- ]
+
+Вывод 2)
+<<<<<<<<        Programm_12        >>>>>>>>
++-----------------------------------------+
+| Example :                               |
+| > Write down number of elements : 3     |
+| > Write down elements (value key)       |
+| 1) : 5 1                                |
+| 2) : 10 2                               |
+| 3) : 7 8                                |
++-----------------------------------------+
+
+ > Write down number of elements : 10
+ > Write down elements (value key)
+ 1) 1 1
+ 2) 4 3
+ 3) 99 2
+ 4) 78 6
+ 5) 10 11
+ 6) 65 9
+ 7) 23 4
+ 8) 17 7
+ 9) 89 0
+ 10) 12 12
+
+ > Height  : 5
+ > Width   : 2
+
+ > Write down key : 0
+
+ > tree[0] = 89
+ > tree.depth(0) = 1
+
+[ tree ]
+ <> value : 89; key : 0
+ <> value : 1; key : 1
+ <> value : 99; key : 2
+ <> value : 4; key : 3
+ <> value : 23; key : 4
+ <> value : 78; key : 6
+ <> value : 17; key : 7
+ <> value : 65; key : 9
+ <> value : 10; key : 11
+ <> value : 12; key : 12
+[ ---- ]
