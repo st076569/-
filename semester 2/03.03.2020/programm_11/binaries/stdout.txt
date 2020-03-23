@@ -1,0 +1,60 @@
+[ binary search tree ]  // Стандартный ввод дерева
+ > Number : 3
+ (Value, Key)
+ 1) : 1 2
+ 2) : 3 4
+ 3) : 5 6
+[      end tree      ]
++======================= start =======================+
+ <> Height  : 2
+ <> Width   : 1
+ > Write down key : 4
+ <> tree[4] = 3
+ <> tree.depth(4) = 1
+
+[ binary search tree ]  // Стандартный вывод дерева
+ <> value : 1; key : 2
+ <> value : 3; key : 4
+ <> value : 5; key : 6
+[      end tree      ]
++======================== end ========================+
++======================= start =======================+
+ <> Height  : 2
+ <> Width   : 1
+ > Write down key : 4
+ <> tree[4] = 3
+ <> tree.depth(4) = 1
+
+[ binary search tree ]
+ <> value : 1; key : 2
+ <> value : 3; key : 4
+ <> value : 5; key : 6
+[      end tree      ]
++======================== end ========================+
+[ binary search tree ]
+ > Number : 1
+ (Value, Key)
+ 1) : 5 6
+[      end tree      ]
++======================= start =======================+
+ <> Height  : 2
+ <> Width   : 1
+ > Write down key : 0
+ <> tree[0] = -1
+ <> tree.depth(0) = -1
+
+[ binary search tree ]
+ <> value : 5; key : 6
+[      end tree      ]
++======================== end ========================+
++======================= start =======================+
+ <> Height  : 2
+ <> Width   : 1
+ > Write down key : 6
+ <> tree[6] = 5
+ <> tree.depth(6) = 0
+
+[ binary search tree ]
+ <> value : 5; key : 6
+[      end tree      ]
++======================== end ========================+
