@@ -1,0 +1,112 @@
+ [ Average number ]
+ > number : 500
+ > blr : 52.24
+ > brr : 62.62
+ > slr : 73.4
+ > srr : 45.12
+ [ end ]
+ [ Average number ]
+ > number : 600
+ > blr : 62.4
+ > brr : 74.4833
+ > slr : 87.8
+ > srr : 54.4167
+ [ end ]
+ [ Average number ]
+ > number : 700
+ > blr : 73.1571
+ > brr : 85.2571
+ > slr : 105.329
+ > srr : 63.7571
+ [ end ]
+ [ Average number ]
+ > number : 800
+ > blr : 83.8375
+ > brr : 101.412
+ > slr : 120.475
+ > srr : 72.2
+ [ end ]
+ [ Average number ]
+ > number : 900
+ > blr : 94.5556
+ > brr : 112.6
+ > slr : 135.167
+ > srr : 80.5667
+ [ end ]
+ [ Average number ]
+ > number : 1000
+ > blr : 105.69
+ > brr : 124.97
+ > slr : 149.87
+ > srr : 92.17
+ [ end ]
+ [ Average number ]
+ > number : 1100
+ > blr : 113.436
+ > brr : 138.018
+ > slr : 163.855
+ > srr : 99.3727
+ [ end ]
+ [ Average number ]
+ > number : 1200
+ > blr : 127.85
+ > brr : 149.8
+ > slr : 178.442
+ > srr : 107.308
+ [ end ]
+ [ Average number ]
+ > number : 1300
+ > blr : 135.746
+ > brr : 159.862
+ > slr : 196.469
+ > srr : 118.131
+ [ end ]
+ [ Average number ]
+ > number : 1400
+ > blr : 147.171
+ > brr : 174.486
+ > slr : 210.407
+ > srr : 126.386
+ [ end ]
+ [ Average number ]
+ > number : 1500
+ > blr : 156.68
+ > brr : 186.56
+ > slr : 225.48
+ > srr : 136.933
+ [ end ]
+ [ Average number ]
+ > number : 1600
+ > blr : 168.119
+ > brr : 201.163
+ > slr : 240.175
+ > srr : 143.95
+ [ end ]
+ [ Average number ]
+ > number : 1700
+ > blr : 179.824
+ > brr : 212.259
+ > slr : 256.341
+ > srr : 154.712
+ [ end ]
+ [ Average number ]
+ > number : 1800
+ > blr : 189.022
+ > brr : 225.422
+ > slr : 271.139
+ > srr : 162.133
+ [ end ]
+ [ Average number ]
+ > number : 1900
+ > blr : 200.805
+ > brr : 238.584
+ > slr : 287.011
+ > srr : 171.826
+ [ end ]
+ [ Average number ]
+ > number : 2000
+ > blr : 210.215
+ > brr : 250.595
+ > slr : 300.965
+ > srr : 180.21
+ [ end ]
