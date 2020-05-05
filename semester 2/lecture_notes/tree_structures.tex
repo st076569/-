@@ -1,0 +1,577 @@
+% <============================ Древесные структуры данных ============================>
+% Баталов Семен, группа 151, 2020
+% Конспект по программированию
+% <============================ Древесные структуры данных ============================>
+
+\documentclass[12pt, a4paper]{report}			% Размер бумаги устанавливаем А4, шрифт 12пунктов
+\usepackage{graphicx}						% Подключаем графический модуль
+\usepackage{multirow}						% Возможность объединять строки таблицы
+\graphicspath{{../../pictures/}}					% Путь к картинкам
+\usepackage[utf8]{inputenc}					% Включаем свою кодировку: utf8
+\usepackage[english, russian]{babel}			% Используем русский и английский языки с переносами
+\usepackage{indentfirst}						% Красная строка для первого параграфа
+\usepackage{misccorr}						% Соответствие стандарту
+\usepackage{tikz}								% Подключаем модуль диаграмм
+\usepackage{amsmath}						% Математика
+\usepackage{listingsutf8}
+
+\begin{document}
+
+\title{Древесные структуры данных}
+\author{Баталов Семен}
+\date{2 мая 2020 г.}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Предисловие}
+
+В данном разделе будут рассматриваться бинарные деревья. Будут освещены некоторые алгоритмы работы с такими структурами данных 
+и асимптотические оценки этих алгоритмов. Так же будут описаны свойства деревьев и разновидности этих структур даннных. 
+
+\section{Основная терминология}
+
+Ниже представлено бинарное дерево (дерево, в котором каждый узел имеет не более двух потомков). Справа от него расположено 
+количество элементов на каждом уровне и итоговое количество элементов дерева.
+
+Стоит отметить, что среднее время поиска одного элемента $O(n),$ где~$n = 2^{k + 1} - 1.$ При этом среднее время вставки логарифмическое~$O(\log n)$.
+
+% <<<<Бинарное дерево>>>>
+\begin{center}
+	\begin{tikzpicture}[level/.style={sibling distance=50mm/#1}]
+	\node {$Root_{0}$}
+		child{node {$Cell_{1}$}
+			child{node {$Cell_{2}$}
+				child{node {$\vdots$}
+					child{node {$Leaf_{k}$}}
+					child{node {$Leaf_{k}$}}
+				}
+				child{node {$\vdots$}}
+			}
+			child{node {$Cell_{2}$}
+				child{node {$\vdots$}}
+				child{node {$\vdots$}}
+			}
+		}
+		child{node {$Cell_{1}$}
+			child{node {$Cell_{2}$}
+				child{node {$\vdots$}}
+				child{node {$\vdots$}}
+			}
+			child{node {$Cell_{2}$}
+				child{node {$\vdots$}}
+				child{node {$\vdots$}
+					child{node {$Leaf_{k}$}}
+					child{node {$Leaf_{k}$}
+						child [grow=right] {node (a) {$2^{k}$} edge from parent[draw=none]
+							child [grow=up] {node (b) {$\vdots$} edge from parent[draw=none]
+								child [grow=up] {node (c) {$2^{2}$} edge from parent[draw=none]
+									child [grow=up] {node (d) {$2^{1}$} edge from parent[draw=none]
+										child [grow=up] {node (e) {$2^{0}$} edge from parent[draw=none]}
+									}
+								}
+							}
+							child [grow=down] {node (f) {($2^{k+1} - 1)$} edge from parent[draw=none]}
+						}
+					}
+				}
+			}
+		};
+	\path (a) -- (b) node [midway] {+};
+	\path (b) -- (c) node [midway] {+};
+	\path (c) -- (d) node [midway] {+};
+	\path (d) -- (e) node [midway] {+};
+	\path (a) -- (f) node [midway] {\textbardbl};
+	\end{tikzpicture}
+\end{center}
+% <<<<Бинарное дерево>>>>
+
+\subsection{Определения}
+\begin{itemize}
+	\item \textbf{Потомки}~--~это те элементы, в которые можем попасть из текущего.
+	\item \textbf{Предки}~--~это те элементы, из которых можем попасть в текущий.
+	\item \textbf{Корень}~--~это элемент дерева без предков.
+	\item \textbf{Лист}~--~это элемент дерева без потомков.
+	\item \textbf{Прямой потомок}~--~это тот потомок, в который попадаем за один шаг.
+	\item \textbf{Прямой предок}~--~это тот предок, из которого попадаем за один шаг.
+	\item \textbf{Глубина элемента}~--~это расстояние от корня до текущего элемента.
+	\item \textbf{Высота дерева}~--~это максимальная глубина.
+	\item \textbf{Уровень}~--~это множество элементов с одинаковой глубиной.
+	\item \textbf{Идеально сбалансированное дерево}~--~это дерево, в котором у всех элементов кроме элементов последних 
+	двух уровней есть ровно два потомка.
+	\item \textbf{Сбалансированное дерево}~--~это дерево, высота которого логарифмична количеству элементов.
+\end{itemize}
+
+\section{Дерево поиска}
+
+Рассмотрим бинарное дерево, где каждому элементу приписали ключ~(некоторое целое число), уникальный 
+для каждого элемента.
+
+\subsection{Определение}
+\begin{itemize}
+	\item \textbf{Дерево поиска}~--~это дерево, в котором для каждого элемента выполнено свойство: Значение ключа всех 
+	левых потомков меньше значения ключа текущего, а значение ключей всех правых потомков больше текущего.
+\end{itemize}
+
+Ниже приведен пример дерева поиска. За счет упорядоченной структуры это дерево позволяет эффективно решать задачу поиска.
+Далее мы рассмотрим всевозможные способы обхода этого дерева.
+
+% <<<<Дерево поиска>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=5cm, level distance=1.7cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $9$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $6$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $3$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $2$}}
+				child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $4$}}
+			}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $8$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $10$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $10$}}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $15$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $11$}}
+			}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Дерево поиска>>>>
+
+\subsection{Обход в глубину (prefix)}
+
+\begin{enumerate}
+	\item Обрабатываем элемент ($O(1)$)
+	\item Рекурсивно переходим к левому потомку ($O(1)$)
+	\item Рекурсивно переходим к правому потомку ($O(1)$)
+\end{enumerate}
+
+Далее приведен пример такого обхода в глубину. Нижний индекс указывает, каким по счету будет обрабатываться элемент.
+Общая оценка сложности обхода в глубину $O(n)$.
+
+% <<<<Обход в глубину (prefix)>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=5cm, level distance=1.7cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $9_{1}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $6_{2}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $3_{3}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $2_{4}$}}
+				child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $4_{5}$}}
+			}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $8_{6}$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $10_{7}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $10_{8}$}}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $15_{9}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $11_{10}$}}
+			}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Обход в глубину (prefix)>>>>
+
+\subsection{Обход в глубину (postfix)}
+
+\begin{enumerate}
+	\item Рекурсивно переходим к левому потомку
+	\item Рекурсивно переходим к правому потомку
+	\item Обрабатываем элемент
+\end{enumerate}
+
+Далее приведен пример такого обхода в глубину. Нижний индекс указывает, каким по счету будет обрабатываться элемент.
+Общая оценка сложности обхода в глубину $O(n)$.
+
+% <<<<Обход в глубину (postfix)>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=5cm, level distance=1.7cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $9_{10}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $6_{5}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $3_{3}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $2_{1}$}}
+				child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $4_{2}$}}
+			}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $8_{4}$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $10_{9}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $10_{6}$}}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $15_{8}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $11_{7}$}}
+			}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Обход в глубину (postfix)>>>>
+
+\subsection{Обход в глубину (infix)}
+
+\begin{enumerate}
+	\item Рекурсивно переходим к левому потомку
+	\item Обрабатываем элемент
+	\item Рекурсивно переходим к правому потомку
+\end{enumerate}
+
+Далее приведен пример такого обхода в глубину. Нижний индекс указывает, каким по счету будет обрабатываться элемент.
+
+% <<<<Обход в глубину (infix)>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=5cm, level distance=1.7cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $9_{6}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $6_{4}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $3_{2}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $2_{1}$}}
+				child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $4_{3}$}}
+			}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $8_{5}$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $10_{8}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $10_{7}$}}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $15_{10}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $11_{9}$}}
+			}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Обход в глубину (infix)>>>>
+
+Данный способ обхода позволяет отсортировать элементы дерева по значению ключа. Причем сложность такой 
+сортировки $O(n \cdot \log n)$, так как в дереве всего $n$ элементов, вставка каждого и которых занимает 
+$O(\log n)$, а общая оценка сложности обхода $O(n)$.
+
+Объем памяти, требуемый для обхода в глубину: $O(h),$ где~$h$~--~высота дерева.
+
+\subsection{Обход в ширину (bfs)}
+
+Данный обход производится последовательно по каждому уровню. Достаточно составить очередь, в которую будем записывать указатели
+на потомки текущего элемента (слева направо). Будем обрабатывать элементы из очереди, пока они не кончатся.
+
+Далее приведен пример такого обхода в ширину. Нижний индекс указывает, каким по счету будет обрабатываться элемент.
+
+% <<<<Обход в ширину>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=5cm, level distance=1.7cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $9_{1}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $6_{2}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $3_{4}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $2_{8}$}}
+				child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $4_{9}$}}
+			}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $8_{5}$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $10_{3}$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $10_{6}$}}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $15_{7}$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $11_{10}$}}
+			}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Обход в ширину>>>>
+
+Объем памяти, требуемый для обхода в ширину: $O(w),$ где~$w$~--~максимальное количество элементов на уровне.
+
+\section{Самобалансирующиеся деревья}
+
+Здесь мы рассмотрим условия сбалансированности бинарных деревьев поиска и методы их балансировки.
+
+\subsection{Определение}
+\begin{itemize}
+	\item \textbf{АВЛ дерево}~--~это бинарное дерево поиска, в котором для каждого элемента выполнено свойство: Разница высот 
+	левого и правого поддеревьев по модулю не превосходит единицы.
+\end{itemize}
+
+Рассмотрим АВЛ дерево высоты $k$. Оценим количество элементов в нем сверху и снизу.
+
+$$
+F(k) \le n \le 2^{k+1}-1
+$$
+
+В этом неравенстве $F(k) = 1 + F(k - 1) + F(k - 2)$~--~нижняя оценка. При этом $F(k - 1)$ и $F(k - 2)$~--~количество элементов в левом и правом поддеревьях. 
+Очевидно $F(k) > Fib(k)$~--~$k$-ое число Фибоначчи.
+
+Из формулы Бине вытекает следующее:
+
+$$
+n > \left(\frac{1 + \sqrt 5}{2}\right)^{k}
+$$
+
+В итоге получаем оценку сверху и снизу для количества элементов АВЛ дерева:
+
+$$
+\varphi^{k} \le n \le \psi^{k}
+$$
+
+То есть $n = \theta^{k}$~--~это показательная функция. Следовательно, высота дерева $k = \log n$. По определению 
+такое дерево является сбалансированным. То есть АВЛ дерево по определению является сбалансированным.
+
+\section{Вставка и балансировка}
+
+Здесь будут рассматриваться способы балансировки АВЛ дерева при вставке в него элементов. Возьмем некоторое АВЛ дерево: 
+
+% <<<<АВЛ дерево 1>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=5cm, level distance=1.7cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $8$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $3$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $1$}}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $6$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $14$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $12$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $9$}}
+			}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $16$}}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<АВЛ дерево 1>>>>
+
+Попробуем осуществить вставку элемента 10 в него так, как показано на следующем рисунке. 
+Дерево перестает быть сбалансированным, так как разность высот поддеревьев вершины 14 по модулю 
+становится равной~2.
+
+% <<<<АВЛ дерево 2>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=5cm, level distance=1.7cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $8$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $3$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $1$}}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $6$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $14$}
+			child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $12$}
+				child [grow=south west] {node [circle, minimum size=1.2cm, draw] {\large $9$}
+					child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $10$}}
+				}
+			}
+			child [grow=south east] {node [circle, minimum size=1.2cm, draw] {\large $16$}}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<АВЛ дерево 2>>>>
+
+\subsection{Определение}
+\begin{itemize}
+	\item \textbf{Поворот дерева}~--~это операция, которая позволяет изменить структуру дерева не 
+	меняя порядка элементов.
+\end{itemize}
+
+Чтобы решить проблему разбалансированности дерева поиска, используют следующие повороты:
+
+\begin{enumerate}
+	\item Малый левый поворот (SLR)
+	\item Малый правый поворот (SRR)
+	\item Большой левый поворот (BLR)
+	\item Большой правый поворот (BRR)
+\end{enumerate}
+
+\subsection{Малый правый и левый повороты}
+
+Рассмотрим следующее АВЛ дерево:
+
+% <<<<Малый правый поворот>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=4cm, level distance=1.8cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $A_{k+2}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $B_{k+1}$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\alpha_{k}$}}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\beta_{k}$}}
+		}
+		child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\gamma_{k}$}};
+	\end{tikzpicture}
+\end{center}
+% <<<<Малый правый поворот>>>>
+
+Высоты его поддеревьев таковы: $H(\alpha)=H(\beta)=H(\gamma)=k, H(A)=k+2, H(B)=k+1$. Условие баланса выполнено. Увеличим 
+высоту поддерева $\alpha$, добавив элемент, и получим: $H(\alpha)=k+1, H(\beta)=k, H(\gamma)=k, H(A)=k+3, H(B)=k+2$. Дерево разбалансировано.
+
+% <<<<Малый правый поворот>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=4cm, level distance=1.8cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $A_{k+3}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $B_{k+2}$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\alpha_{k+1}$}}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\beta_{k}$}}
+		}
+		child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\gamma_{k}$}};
+	\end{tikzpicture}
+\end{center}
+% <<<<Малый правый поворот>>>>
+
+Преобразуем это дерево малым правым поворотом:
+
+% <<<<Малый правый поворот>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=4cm, level distance=1.8cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $B_{k+2}$}
+		child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\alpha_{k+1}$}}
+		child {node [circle, minimum size=1.2cm, draw] {\large $A_{k+1}$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\beta_{k}$}}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\gamma_{k}$}}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Малый правый поворот>>>>
+
+Переписав три указателя, мы сбалансировали это дерево (за $O(1)$). При этом сохранилось свойство поиска. Малый левый 
+поворот выполняется аналогично, но только в инвертированной ситуации.
+
+\newpage
+\subsection{Большой правый и левый повороты}
+
+Рассмотрим следующее АВЛ дерево:
+
+% <<<<Большой правый поворот>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=4cm, level distance=1.8cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $A_{k+3}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $B_{k+2}$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\alpha_{k+1}$}}
+			child {node [circle, minimum size=1.2cm, draw] {\large $C_{k+1}$}
+				child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\beta_{k}$}}
+				child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\gamma_{k}$}}
+			}
+		}
+		child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\delta_{k+1}$}};
+	\end{tikzpicture}
+\end{center}
+% <<<<Большой правый поворот>>>>
+
+Высоты его поддеревьев таковы: $H(\beta)=H(\gamma)=k, H(\alpha)=H(\delta)=k+1, H(A)=k+3, H(B)=k+2, H(C)=k+1$. Условие баланса выполнено. 
+Увеличим высоту поддерева $\beta$, добавив элемент, и получим: $H(\alpha)=H(\delta)=H(\beta)=k+1, H(\gamma)=k, H(A)=k+4, H(B)=k+3, H(C)=k+2$. 
+Дерево разбалансировано.
+
+% <<<<Большой правый поворот>>>>
+\begin{center}
+	\begin{tikzpicture}[sibling distance=4cm, level distance=1.8cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $A_{k+4}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $B_{k+3}$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\alpha_{k+1}$}}
+			child {node [circle, minimum size=1.2cm, draw] {\large $C_{k+2}$}
+				child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\beta_{k+1}$}}
+				child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\gamma_{k}$}}
+			}
+		}
+		child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\delta_{k+1}$}};
+	\end{tikzpicture}
+\end{center}
+% <<<<Большой правый поворот>>>>
+
+Преобразуем это дерево большим правым поворотом:
+
+% <<<<Большой правый поворот>>>>
+\begin{center}
+	\begin{tikzpicture}[level/.style={sibling distance=5cm/#1}, level distance=1.8cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $C_{k+3}$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $B_{k+2}$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\alpha_{k+1}$}}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\beta_{k+1}$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $A_{k+2}$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\gamma_{k}$}}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\delta_{k+1}$}}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Большой правый поворот>>>>
+
+Переписав пять указателей, мы сбалансировали это дерево (за $O(1)$). Так же сохранилось свойство поиска.
+Большой левый поворот выполняется аналогично, но только в инвертированной ситуации.
+
+Так же стоит отметить, что неважно, в какое поддерево вершины $C$ будет добавлен элемент. В любом случае большой поворот 
+сбалансирует дерево. Несложно видеть, что большой правый поворот является композицией малого левого поворота относительно 
+вершины $B$ и малого правого поворота относительно вершины $C$. Аналогично большой левый поворот является композицией
+малого правого и малого левого поворотов.
+
+\subsection{Добавление элемента}
+
+Мы хотим вставлять элементы в АВЛ дерево за $O(\log n)$, поэтому нам нужно постоянно поддерживать его сбалансированным. 
+Введем для каждой вершины величину баланса $balance(X) \in \{-1, 0, 1\}$, равную разности высот правого и левого 
+поддеревьев этой вершины. Рассмотрим следующее АВЛ дерево:
+
+% <<<<Вставка в АВЛ дерево>>>>
+\begin{center}
+	\begin{tikzpicture}[level/.style={sibling distance=5cm/#1}, level distance=1.8cm]
+	\node [circle, minimum size=1.2cm, draw] {\large $A$}
+		child {node [circle, minimum size=1.2cm, draw] {\large $B$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\alpha$}}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\beta$}}
+		}
+		child {node [circle, minimum size=1.2cm, draw] {\large $C$}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\gamma$}}
+			child {node [rectangle, minimum height=1.2cm, minimum width=1.2cm, draw] {\large $\delta$}}
+		};
+	\end{tikzpicture}
+\end{center}
+% <<<<Вставка в АВЛ дерево>>>>
+
+Будем добавлять элементы в левое и правое поддерево и смотреть, как меняются величины баланса для вершин $A$, $B$, $C$. 
+Составим таблицу возможных изменений:
+
+% <<<<Таблица балансов>>>>
+\begin{center}
+	\begin{tabular}{ |c | c | c | c | c | c | c | c | c | c | c |} \cline{1-5} \cline{7-11}
+		\multirow{2}*{$Rotate$} & \multirow{2}*{$balance(B)$} & \multicolumn{3}{| c |}{$balance(A)$} & & \multirow{2}*{$Rotate$} & \multirow{2}*{$balance(C)$} & \multicolumn{3}{| c |}{$balance(A)$}\\ \cline {3-5} \cline{9-11}
+		& & $-1$ & $0$ & $1$ & & & & $-1$ & $0$ & $1$ \\ \cline{1-5} \cline{7-11}
+		$none$ & $1 \longrightarrow -1$ & $-1$ & $0$ & $1$ & & $none$ & $1 \longrightarrow -1$ & $-1$ & $0$ & $1$ \\ \cline{1-5} \cline{7-11}
+		$none$ & $-1 \longrightarrow 0$ & $-1$ & $0$ & $1$ & & $none$ & $-1 \longrightarrow 0$ & $-1$ & $0$ & $1$ \\ \cline{1-5} \cline{7-11}
+		$SRR$ & $0 \longrightarrow -1$ & \textbf{0*} & $-1$ & $0$ & & $BLR$ & $0 \longrightarrow -1$ & $0$ & $1$ & \textbf{0*} \\ \cline{1-5} \cline{7-11}
+		$none$ & $0 \longrightarrow 0$ & $-1$ & $0$ & $1$ & & $none$ & $0 \longrightarrow 0$ & $-1$ & $0$ & $1$ \\ \cline{1-5} \cline{7-11}
+		$BRR$ & $0 \longrightarrow 1$ & \textbf{0*} & $-1$ & $0$ & & $SLR$ & $0 \longrightarrow 1$ & $0$ & $1$ & \textbf{0*} \\ \cline{1-5} \cline{7-11}
+		$none$ & $1 \longrightarrow 1$ & $-1$ & $0$ & $1$ & & $none$ & $1 \longrightarrow 1$ & $-1$ & $0$ & $1$ \\ \cline{1-5} \cline{7-11}
+		$none$ & $1 \longrightarrow 0$ & $-1$ & $0$ & $1$ & & $none$ & $1 \longrightarrow 0$ & $-1$ & $0$ & $1$ \\ \cline{1-5} \cline{7-11}
+	\end{tabular}
+\end{center}
+% <<<<Таблица балансов>>>>
+
+Теперь, опираясь на данные таблицы, можно составить алгоритм вставки нового элемента в АВЛ дерево. Далее представлена 
+процедура вставки, описанная на алгоритмическом языке (за основу взят С++).
+
+\subsection{Процедура вставки}
+\lstset{language = C++}
+\begin{lstlisting}
+void insert(Note* N, int x)
+{
+  int bal = 0;    // next vertex balance
+  if (N != NULL)
+    {
+      if (N.value <= x)
+      {
+        bal = N.right*.bal;
+        insert(N.right*, x);
+        if (bal == 0 && N.right*.bal == 1 && N.bal == 1)
+        {
+          use SLR;
+        }
+        else
+        if (bal == 0 && N.right*.bal == -1 && N.bal == 1)
+        {
+          use BLR;
+        }
+          update N.bal;
+      }
+      else
+      {
+        bal = N.left*.bal;
+        insert(N.left*, x);
+        if (bal == 0 && N.left*.bal == 1 && N.bal == -1)
+        {
+          use BRR;
+        }
+        else
+        if (bal == 0 && N.left*.bal == -1 && N.bal == -1)
+        {
+          use SRR;
+        }
+        update N.bal;
+      }
+    }
+    else
+    {
+      N = new Note;
+      N.value = x;
+      N.bal = 0;
+    }
+}
+\end{lstlisting}
+
+\end{document}
