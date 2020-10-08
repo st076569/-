@@ -1,0 +1,14 @@
+﻿Number of elements : 1500	//В массиве 1500 элементов
+
+MergeSort
+Number 'swap'       : 7091	//Кол-во операций swap
+Number 'comparison' : 13996	//Кол-во сравнений
+SelectionSort
+Number 'swap'       : 1486
+Number 'comparison' : 1124250
+QuickSort
+Number 'swap'       : 3637
+Number 'comparison' : 25321
+
+(For QuickSort) swap_time / copmarison_time >= 506.305	//Средний коэффициент (проверяется 200 случайных массивов)
+(For MergeSort) swap_time / copmarison_time >= 198.24
