@@ -65,10 +65,10 @@ namespace bat
             Stack();
             
             // (2) Конструктор копирования
-            Stack(const Stack& newStack);
+            Stack(const Stack& newStack) = delete;
             
             // (3) Перегрузка оператора присваивания
-            Stack<T>& operator=(const Stack& newStack);
+            Stack<T>& operator=(const Stack& newStack) = delete;
             
             ////////// Методы доступа ////////////////////////////////////////
             
@@ -104,67 +104,6 @@ namespace bat
     {
         head_ = nullptr;
         size_ = 0;
-    }
-    
-    // (2) Конструктор копирования
-    template <typename T>
-	Stack<T>::Stack(const Stack& newStack)
-    {
-        *this = newStack;
-    }
-    
-    // (3) Перегрузка оператора присваивания
-    template <typename T>
-	Stack<T>& Stack<T>::operator=(const Stack& newStack)
-    {
-        // Перехват управления
-        std::lock_guard<std::mutex> lg(mut_);
-        
-        // Проверка на самоприсваивание
-        if (this != &newStack)
-        {
-            try
-            {
-                T           tempValue;
-                Element<T>* assignable = nullptr;
-                Element<T>* copied     = nullptr;
-                
-                // Подгоняем по размеру
-                while (size_ > newStack.size_)
-                {
-                    Element<T>* tempHead = head_;
-                    head_ = tempHead->next;
-                    --size_;
-                    delete tempHead;
-                }
-                while (size_ < newStack.size_)
-                {
-                    // Добавляем новый элемент
-                    Element<T>* tempHead = head_;
-                    head_        = new Element<T>;
-                    head_->value = tempValue;
-                    head_->next  = tempHead;
-                    ++size_;
-                }
-                
-                // Инициализируем
-                assignable = head_;
-                copied     = newStack.head_;
-                
-                // Копируем значения "newStack" в стек
-                while (assignable != nullptr && copied != nullptr)
-                {
-                    assignable->value = copied->value;
-                    assignable        = assignable->next;
-                    copied            = copied->next;
-                }
-            }
-            catch (...)
-            {
-                // Предотвращаем выброс исключения
-            }
-        }
-        return *this;
     }
     
     // (4) Извлекает последний записанный элемент
